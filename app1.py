@@ -38,7 +38,7 @@ for year in Sheets:
 
 
 app.layout = html.Div([
-    html.H1("HI"),
+    html.H1("Namaste Credit"),
     dcc.Dropdown(id='sheet-picker',options=year_options,value="None"),
     html.Div(id="table")
     ])
