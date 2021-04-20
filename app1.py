@@ -13,10 +13,6 @@ USERNAME_PASSWORD_PAIRS = [
     ['Shubham', 'abcd@123'],['Saurabh', 'password#123']
 ]
 
-df = pd.read_csv("State Vs LLC Count & Amount.csv",index_col=0)
-df1 = pd.read_csv("Product Vs DisbursedAmount.csv",index_col=0)
-df2 = pd.read_csv("Lender Vs DisbursedAmount.csv",index_col=0)
-
 
 def DataframeFormatter(df):
     df.iloc[:4,:].fillna("",inplace = True)
@@ -29,9 +25,7 @@ def DataframeFormatter(df):
     df.reset_index(inplace = True)
     return df
 
-df = DataframeFormatter(df)
-df1 = DataframeFormatter(df1)
-df2 = DataframeFormatter(df2)
+
 Sheets = ["State Vs LLC Count & Amount(cr)","Product Vs DisbursedAmount(cr)","Lender Vs DisbursedAmount(cr)"] 
 app = dash.Dash()
 auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
@@ -44,7 +38,8 @@ for year in Sheets:
 
 
 app.layout = html.Div([
-    dcc.Dropdown(id='sheet-picker',options=year_options,value=Sheets[0]),
+    html.H1("HI"),
+    dcc.Dropdown(id='sheet-picker',options=year_options,value="None"),
     html.Div(id="table")
     ])
 
@@ -52,15 +47,22 @@ app.layout = html.Div([
             [Input('sheet-picker', 'value')])
 
 def update_datatable(sheet):
+
     if sheet == Sheets[0]:
+        df = pd.read_csv("State Vs LLC Count & Amount.csv",index_col=0)
+        df = DataframeFormatter(df)
         data = df.to_dict('rows')
         columns =  [{"name": i, "id": i,} for i in (df.columns)]
         return dt.DataTable(data=data, columns=columns)
     if sheet == Sheets[1]:
+        df1 = pd.read_csv("Product Vs DisbursedAmount.csv",index_col=0)
+        df1 = DataframeFormatter(df1)
         data = df1.to_dict('rows')
         columns =  [{"name": i, "id": i,} for i in (df1.columns)]
         return dt.DataTable(data=data, columns=columns)
     if sheet == Sheets[2]:
+        df2 = pd.read_csv("Lender Vs DisbursedAmount.csv",index_col=0)
+        df2 = DataframeFormatter(df2)
         data = df2.to_dict('rows')
         columns =  [{"name": i, "id": i,} for i in (df2.columns)]
         return dt.DataTable(data=data, columns=columns)
